@@ -15,6 +15,7 @@ export default function Home() {
 
   const handleUpload = async () => {
     if (!selectedFile) {
+      console.log('No file chosen...');
       return;
     }
 
@@ -72,7 +73,12 @@ export default function Home() {
       <h1>Extract Text from PDF</h1>
 
       <input type="file" accept=".pdf" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Get Text from PDF</button>
+      <button
+        className="bg-yellow-400 p-2 rounded-lg hover:bg-cyan-400 hover:text-white"
+        onClick={handleUpload}
+      >
+        Get Text from PDF
+      </button>
       <p>{extractedText}</p>
     </main>
   );
