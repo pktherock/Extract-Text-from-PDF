@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [extractedText, setExtractedText] = useState<string>('');
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -20,7 +21,7 @@ export default function Home() {
     try {
       const pdfBuffer = await readFileAsBuffer(selectedFile);
       console.log('PDF Array Buffer', pdfBuffer);
-      await getTextFromPdfBtnClick(pdfBuffer);
+      await getTextFromPdf(pdfBuffer);
       alert('PDF uploaded successfully!');
     } catch (error) {
       console.error('Error uploading PDF:', error);
@@ -41,13 +42,15 @@ export default function Home() {
     });
   };
 
-  const getTextFromPdfBtnClick = async (pdfBuffer: any) => {
+  const getTextFromPdf = async (pdfBuffer: any) => {
     const formData = new FormData();
     formData.append('pdf', new Blob([pdfBuffer], { type: 'application/pdf' }));
 
     const result = await extractTextFromPDF(pdfBuffer); // in client side
-
     console.log(result);
+
+    setExtractedText(result);
+
     try {
       const res = await fetch('api/extractPdf', {
         method: 'POST',
@@ -70,6 +73,7 @@ export default function Home() {
 
       <input type="file" accept=".pdf" onChange={handleFileChange} />
       <button onClick={handleUpload}>Get Text from PDF</button>
+      <p>{extractedText}</p>
     </main>
   );
 }
